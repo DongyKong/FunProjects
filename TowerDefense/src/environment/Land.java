@@ -2,6 +2,6 @@ package environment;
 
 import javax.swing.JPanel;
 
-public abstract class Land extends JPanel {
-	private int			xCoord, yCoord;
+public abstract class Land extends MapObject {
+	private int	xCoord, yCoord;
 }

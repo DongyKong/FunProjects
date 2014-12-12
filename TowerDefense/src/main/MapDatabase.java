@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import environment.MapObject;
+
 public class MapDatabase extends Thread {
 	/*******************	CONSTANTS AND STATICS	*******************/
 	
@@ -21,14 +23,21 @@ public class MapDatabase extends Thread {
 	
 	public static int nextMapID = 0;
 	
+	public static final String imgPath			= "data/images/";
+	public static final String grassImg			= imgPath + "grass.jpg";
+	public static final String rockImg			= imgPath + "rock.png";
+	public static final String bluePortalImg	= imgPath + "bluePortal.png";
+	public static final String orangePortalImg	= imgPath + "orangePortal.png";
+	public static final String pathImg			= imgPath + "path.png";
+	
 	/*******************	CLASS VARIABLES		*******************/
 	
-	public ArrayList<Map> allMaps;
+	public ArrayList<DataMap> allMaps;
 	
 	/*******************	CLASS METHODS		*******************/
 
 	public MapDatabase() {
-		allMaps = new ArrayList<Map>();
+		allMaps = new ArrayList<DataMap>();
 	}
 	
 	//	Load the maps from file
@@ -38,7 +47,7 @@ public class MapDatabase extends Thread {
 			InputStream buffer = new BufferedInputStream(file);
 			ObjectInput input = new ObjectInputStream(buffer); )
 		{
-			allMaps = (ArrayList<Map>)input.readObject();
+			allMaps = (ArrayList<DataMap>)input.readObject();
 		}
 		catch(ClassNotFoundException e) { e.getMessage(); }
 		catch(ClassCastException e) { e.getMessage(); }
@@ -57,12 +66,12 @@ public class MapDatabase extends Thread {
 	}
 	
 	//	Return a random map for use then remove from database
-	public Map getMap() {
+	public DataMap getMap() {
 		if(allMaps.size() == 0)
 			return null;
 		
 		int roll = getRandomNumber(allMaps.size() - 1);
-		Map map = allMaps.get(roll);
+		DataMap map = allMaps.get(roll);
 		allMaps.remove(roll);
 		return map;
 	}
@@ -236,7 +245,7 @@ public class MapDatabase extends Thread {
 			if(allMaps.size() < totalNumMaps) {
 				//	Generate a new map
 				char[][] map = generateMap();
-				allMaps.add(new Map(map, nextMapID));
+				allMaps.add(new DataMap(map, nextMapID));
 				nextMapID++;
 			}
 		}
@@ -244,7 +253,7 @@ public class MapDatabase extends Thread {
 	
 	/*******************	HELPER METHODS	*******************/
 	
-	//	Gets a rando number from 0 to max
+	//	Gets a random number from 0 to max
 	private int getRandomNumber(int max) {
 		return (int)Math.ceil(Math.random()*max); 
 	}
@@ -297,14 +306,23 @@ public class MapDatabase extends Thread {
 	
 	/*******************	INNER CLASSES		*******************/
 	
-	//	Wrapper class for the map char grid
-	public class Map implements Serializable {
+	//	For the map as displayed on screen
+	public class GraphicsMap {
+		private MapObject[][] map;
+		
+		public GraphicsMap(char[][] primitive) {
+			
+		}
+	}
+	
+	//	Wrapper class for the map data - for saving to file
+	public class DataMap implements Serializable {
 		private static final long serialVersionUID = -5909161986357882140L;
 		
 		private int ID;
 		private char[][] map;
 		
-		public Map(char[][] map, int ID) {
+		public DataMap(char[][] map, int ID) {
 			this.map = map; 
 			this.ID = ID;
 		}

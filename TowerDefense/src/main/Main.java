@@ -21,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import main.MapDatabase.Map;
+import main.MapDatabase.DataMap;
 import monsters.MonsterFactory;
 import environment.Bank;
 import environment.Entrance;
@@ -133,13 +133,13 @@ public class Main extends JFrame implements Runnable {
 		this.add(sidePanel, BorderLayout.EAST);
 		this.add(gamePanel, BorderLayout.CENTER);
 		
+		//	Load the map to screen
+		
+		
 		this.setSize(gameWindowWidth, gameWindowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		
-		for(Map map; (map = mapDatabase.getMap()) != null;)
-			map.printMap();
 	}
 
 	/*******************	HELPER FUNCTIONS	*******************/

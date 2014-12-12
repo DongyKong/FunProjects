@@ -3,8 +3,9 @@ package towers;
 import javax.swing.JPanel;
 
 import environment.HealthBar;
+import environment.MapObject;
 
-public abstract class Tower extends JPanel implements Runnable {
+public abstract class Tower extends MapObject implements Runnable {
 	private int			xCoord, yCoord;
 	private int			damagePerShot;
 	private int			fireRate;
