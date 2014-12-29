@@ -71,7 +71,7 @@ public class Butler extends JFrame {
 					this.transactions[i][j] = transactions[i][j];
 				
 				//	Add up the amounts
-				if(j == 4) {
+				if(j == 4 && this.transactions[i][3].equals("Purchase")) {
 					String amount = this.transactions[i][j].toString();
 					
 					if(amount.charAt(0) == '$')
