@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
@@ -14,7 +15,15 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+
+import environment.Entrance;
+import environment.Exit;
+import environment.Gate;
+import environment.Grass;
 import environment.MapObject;
+import environment.Obstacle;
+import environment.Path;
 
 public class MapDatabase extends Thread {
 	/*******************	CONSTANTS AND STATICS	*******************/
@@ -66,14 +75,14 @@ public class MapDatabase extends Thread {
 	}
 	
 	//	Return a random map for use then remove from database
-	public DataMap getMap() {
+	public GraphicsMap getMap() {
 		if(allMaps.size() == 0)
 			return null;
 		
 		int roll = getRandomNumber(allMaps.size() - 1);
 		DataMap map = allMaps.get(roll);
 		allMaps.remove(roll);
-		return map;
+		return new GraphicsMap(map.map);
 	}
 		
 	//	Generate a random map
@@ -166,10 +175,11 @@ public class MapDatabase extends Thread {
 			//	Build straight
 			if(roll <= 60) {
 				justTurned = false;
+				int[] origin = curr;
 				curr[0] += straight[0];
 				curr[1] += straight[1];
 				
-				if(checkOutOfBounds(curr) || grid[curr[0]][curr[1]] == 'P') {
+				if(checkOutOfBounds(curr) || checkIfAdjacent(grid, curr, origin)) {
 					curr[0] -= straight[0];
 					curr[1] -= straight[1];
 					continue;
@@ -179,11 +189,12 @@ public class MapDatabase extends Thread {
 			else if(roll <= goLeft) {
 				if(justTurned)
 					continue;
-				
+
+				int[] origin = curr;
 				curr[0] += left[0];
 				curr[1] += left[1];
 				
-				if(checkOutOfBounds(curr) || grid[curr[0]][curr[1]] == 'P') {
+				if(checkOutOfBounds(curr) || checkIfAdjacent(grid, curr, origin)) {
 					curr[0] -= left[0];
 					curr[1] -= left[1];
 					continue;
@@ -195,11 +206,12 @@ public class MapDatabase extends Thread {
 			else {
 				if(justTurned)
 					continue;
-				
+
+				int[] origin = curr;
 				curr[0] += right[0];
 				curr[1] += right[1];
 				
-				if(checkOutOfBounds(curr) || grid[curr[0]][curr[1]] == 'P') {
+				if(checkOutOfBounds(curr) || checkIfAdjacent(grid, curr, origin)) {
 					curr[0] -= right[0];
 					curr[1] -= right[1];
 					continue;
@@ -267,7 +279,7 @@ public class MapDatabase extends Thread {
 	
 		return false;
 	}
-	
+
 	//	Check if map generated a dead end
 	private boolean isDeadEnd(char[][] grid, int[] coord) {
 		int bad = 0;
@@ -311,8 +323,32 @@ public class MapDatabase extends Thread {
 		private MapObject[][] map;
 		
 		public GraphicsMap(char[][] primitive) {
+			map = new MapObject[Main.gameGridDim][Main.gameGridDim];
 			
+			for(int i = 0; i < primitive.length; i++) {
+				for(int j = 0; j < primitive[i].length; j++) {
+					switch(primitive[i][j]) {
+					case '-':
+						map[i][j] = new Grass();
+						break;
+					case 'P':
+						map[i][j] = new Path();
+						break;
+					case 'O':
+						map[i][j] = new Obstacle();
+						break;
+					case 'S':
+						map[i][j] = new Entrance();
+						break;
+					case 'F':
+						map[i][j] = new Exit();
+						break;
+					}
+				}
+			}
 		}
+		
+		public MapObject[][] getGMap() { return map; }
 	}
 	
 	//	Wrapper class for the map data - for saving to file

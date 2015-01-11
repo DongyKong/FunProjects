@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,11 +16,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import main.MapDatabase.DataMap;
 import monsters.MonsterFactory;
@@ -27,22 +30,26 @@ import environment.Bank;
 import environment.Entrance;
 import environment.Exit;
 import environment.Land;
+import environment.MapObject;
 import towers.Tower;
 
 /**
- * TODO: 	START TIME = 5:10
+ * TODO: 	START TIME = 4:30
  * 			END TIME =
  * @author Eric Dong
  *
  */
 
+//	TODO: FIX ADJACENT PATH SHIT
+
 public class Main extends JFrame implements Runnable {
 	/*******************	CONSTANTS AND STATICS	*******************/
 	private static final long serialVersionUID = 1L;
 	
-	public final static int gameWindowHeight = 700;
-	public final static int gameWindowWidth = 1000;
-	public final static int gameGridDim = 25;
+	public final static int sidePanelWidth = 200;
+	public final static int gameWindowWidth = 1100;
+	public final static int gameWindowHeight = gameWindowWidth - sidePanelWidth;
+	public final static int gameGridDim = gameWindowHeight / 50;
 	
 	public final static String mapDataFile = "data/maps.txt";
 	
@@ -126,7 +133,7 @@ public class Main extends JFrame implements Runnable {
 	
 	//	Run the game
 	public void runGame() {
-		sidePanel.setPreferredSize(new Dimension(100, gameWindowHeight));
+		sidePanel.setPreferredSize(new Dimension(sidePanelWidth, gameWindowHeight));
 		sidePanel.add(towerPanel);
 		sidePanel.add(infoPanel);
 		
@@ -134,7 +141,12 @@ public class Main extends JFrame implements Runnable {
 		this.add(gamePanel, BorderLayout.CENTER);
 		
 		//	Load the map to screen
-		
+		MapObject[][] gMap = mapDatabase.getMap().getGMap();
+		for(int i = 0; i < gMap.length; i++) {
+			for(int j = 0; j < gMap[i].length; j++)
+				gamePanel.add(gMap[i][j]);
+		}
+		gamePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
 		
 		this.setSize(gameWindowWidth, gameWindowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
