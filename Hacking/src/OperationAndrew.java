@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 public class OperationAndrew {	
 	
 	static String hack1 = "body {-webkit-transform: rotate(180deg);transform: rotate(180deg);}";
-	static String hack2 = "p:before {content: \" ANDREW IS A FILTHY WHORE! \";}";
+	static String hack2 = "p:before {content: \" ANDREW IS A NICE YOUNG MAN! \";}";
 	
 	public static void main(String args[]) {
 		String cmd = "";
